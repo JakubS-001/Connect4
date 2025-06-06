@@ -128,14 +128,16 @@ void start_game() {
                 selected_col = (selected_col + 1) % COLS;
             } else if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER) {
                 if (place_piece(selected_col)) {
-                    game_over = true;
-                    if (current_player == PLAYER1) score1++;
+                    if (check_winner(current_player)) {
+                        game_over = true;
+                        if (current_player == PLAYER1) score1++;
                         else score2++;
                     } else if (check_draw()) {
                         game_over = true;
                     } else {
                         current_player = (current_player == PLAYER1) ? PLAYER2 : PLAYER1;
                     }
+
                 }
             }
         } else if (ev.type == ALLEGRO_EVENT_TIMER) {
