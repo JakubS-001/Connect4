@@ -51,3 +51,13 @@ bool check_winner(int player) {
     }
     return false;
 }
+
+bool check_draw() {
+    for (int r = 0; r < ROWS; r++) {
+        for (int c = 0; c < COLS; c++) {
+            if (board[r][c] == EMPTY)
+                return false;
+        }
+    }
+    return true;
+}
