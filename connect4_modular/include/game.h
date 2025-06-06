@@ -20,6 +20,7 @@ extern bool game_over;
 
 void reset_board();
 bool place_piece(int col);
+bool check_draw();
 bool check_winner(int player);
 
 #endif
