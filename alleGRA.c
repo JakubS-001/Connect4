@@ -9,7 +9,6 @@
 #include <stdio.h>
 
 #define COLS 7
-// #define ROWS 6
 #define ROWS 6
 #define CELL_SIZE 200
 #define SCREEN_WIDTH (COLS * CELL_SIZE)

@@ -1,12 +1,11 @@
-
 #include "../include/game.h"
-#include "../include/ui.h"
-#include <stdio.h>
+#include <stdbool.h>
 
 int board[ROWS][COLS];
 int current_player = PLAYER1;
 int score1 = 0, score2 = 0;
 bool game_over = false;
+bool draw_game = false;
 
 void reset_board() {
     for (int i = 0; i < ROWS; i++)
@@ -14,6 +13,7 @@ void reset_board() {
             board[i][j] = EMPTY;
     current_player = PLAYER1;
     game_over = false;
+    draw_game = false;
 }
 
 bool place_piece(int col) {
@@ -50,4 +50,34 @@ bool check_winner(int player) {
         }
     }
     return false;
+}
+
+bool is_board_full() {
+    for (int col = 0; col < COLS; col++) {
+        if (board[0][col] == EMPTY) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool play_turn(int col) {
+    if (!place_piece(col)) {
+        return false;
+    }
+
+    if (check_winner(current_player)) {
+        game_over = true;
+        draw_game = false;
+        if (current_player == PLAYER1)
+            score1++;
+        else
+            score2++;
+    } else if (is_board_full()) {
+        game_over = true;
+        draw_game = true;
+    } else {
+        current_player = (current_player == PLAYER1) ? PLAYER2 : PLAYER1;
+    }
+    return true;
 }

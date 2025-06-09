@@ -11,17 +11,17 @@
 static int selected_col = 0;
 
 void draw_board(ALLEGRO_FONT* font, int hover_col) {
-    al_clear_to_color(al_map_rgb(15, 27, 39));
+    al_clear_to_color(al_map_rgb(15, 27, 39)); //Background color
     
     if (hover_col >= 0 && hover_col < COLS) {
-        al_draw_filled_rectangle(hover_col * CELL_SIZE, CELL_SIZE, (hover_col + 1) * CELL_SIZE, SCREEN_HEIGHT, al_map_rgba(255, 255, 255, 30));
+        al_draw_filled_rectangle(hover_col * CELL_SIZE, CELL_SIZE, (hover_col + 1) * CELL_SIZE, SCREEN_HEIGHT, al_map_rgba(76, 91, 106, 90));
     }
 
     for (int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
             int cx = c * CELL_SIZE + CELL_SIZE / 2;
             int cy = (r + 1) * CELL_SIZE + CELL_SIZE / 2;
-            ALLEGRO_COLOR color = al_map_rgb(39, 56, 72);
+            ALLEGRO_COLOR color = al_map_rgb(44, 62, 80); // Default cell color
             if (board[r][c] == PLAYER1)
                 color = al_map_rgb(227, 66, 52);
             else if (board[r][c] == PLAYER2)
