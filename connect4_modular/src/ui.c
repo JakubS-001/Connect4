@@ -14,6 +14,7 @@ void draw_board(ALLEGRO_FONT* font, int hover_col) {
     
     if (hover_col >= 0 && hover_col < COLS) {
         al_draw_filled_rectangle(hover_col * CELL_SIZE, CELL_SIZE, (hover_col + 1) * CELL_SIZE, SCREEN_HEIGHT, al_map_rgba(76, 91, 106, 90));
+
     }
 
     for (int r = 0; r < ROWS; r++) {
@@ -33,9 +34,8 @@ void draw_board(ALLEGRO_FONT* font, int hover_col) {
     sprintf(score_text, "Gracz 1 (Czerwony): %d     Gracz 2 (Zolty): %d", score1, score2);
     al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_WIDTH / 2, 10, ALLEGRO_ALIGN_CENTER, score_text);
 
-    if (game_over) {
-        const char* end_text = draw_game ? "Remis!" :
-            (current_player == PLAYER1 ? "Gracz 1 wygrywa!" : "Gracz 2 wygrywa!");
+    if (game_over) {const char* end_text = draw_game ? "Remis!" :
+        (current_player == PLAYER1 ? "Gracz 1 wygrywa!" : "Gracz 2 wygrywa!");
         al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_WIDTH / 2, 70, ALLEGRO_ALIGN_CENTER, end_text);
         al_draw_text(font, al_map_rgb(200, 200, 200), SCREEN_WIDTH / 2, 130, ALLEGRO_ALIGN_CENTER, "Nacisnij R aby zrestartowac");
     }
@@ -121,7 +121,9 @@ void start_game() {
             running = false;
         } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && !game_over) {
             int col = ev.mouse.x / CELL_SIZE;
+
             play_turn(col);
+
         } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
             if (ev.keyboard.keycode == ALLEGRO_KEY_R) {
                 reset_board();
@@ -131,6 +133,7 @@ void start_game() {
                 selected_col = (selected_col + 1) % COLS;
             } else if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER && !game_over) {
                 play_turn(selected_col);
+
             }
         } else if (ev.type == ALLEGRO_EVENT_TIMER) {
             redraw = true;

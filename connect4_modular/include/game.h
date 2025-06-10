@@ -20,6 +20,7 @@ extern bool draw_game;
 
 void reset_board();
 bool place_piece(int col);
+bool check_draw();
 bool check_winner(int player);
 bool is_board_full(void);
 

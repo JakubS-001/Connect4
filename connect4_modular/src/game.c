@@ -71,6 +71,7 @@ bool check_winner(int player) {
     return false;
 }
 
+<<<<<<< HEAD
 bool is_board_full(void) {
     for (int c = 0; c < COLS; c++) {
         if (board[0][c] == EMPTY) {
@@ -79,3 +80,14 @@ bool is_board_full(void) {
     }
     return true;
 }
+=======
+bool check_draw() {
+    for (int r = 0; r < ROWS; r++) {
+        for (int c = 0; c < COLS; c++) {
+            if (board[r][c] == EMPTY)
+                return false;
+        }
+    }
+    return true;
+}
+>>>>>>> 0eee57d3a94337c504c4e43a01e7f2bb12b2f5ea
