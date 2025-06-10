@@ -1,4 +1,3 @@
-
 #include "../include/ui.h"
 #include "../include/game.h"
 #include <allegro5/allegro.h>
@@ -35,10 +34,28 @@ void draw_board(ALLEGRO_FONT* font, int hover_col) {
     al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_WIDTH / 2, 10, ALLEGRO_ALIGN_CENTER, score_text);
 
     if (game_over) {
-        const char* win_text = current_player == PLAYER1 ? "Gracz 1 wygrywa!" : "Gracz 2 wygrywa!";
-        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_WIDTH / 2, 70, ALLEGRO_ALIGN_CENTER, win_text);
+        const char* end_text = draw_game ? "Remis!" :
+            (current_player == PLAYER1 ? "Gracz 1 wygrywa!" : "Gracz 2 wygrywa!");
+        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_WIDTH / 2, 70, ALLEGRO_ALIGN_CENTER, end_text);
         al_draw_text(font, al_map_rgb(200, 200, 200), SCREEN_WIDTH / 2, 130, ALLEGRO_ALIGN_CENTER, "Nacisnij R aby zrestartowac");
     }
+}
+
+bool play_turn(int col) {
+    if (place_piece(col)) {
+        if (check_winner(current_player)) {
+            game_over = true;
+            if (current_player == PLAYER1) score1++;
+            else score2++;
+        } else if (is_board_full()) {
+            game_over = true;
+            draw_game = true;
+        } else {
+            current_player = (current_player == PLAYER1) ? PLAYER2 : PLAYER1;
+        }
+        return true;
+    }
+    return false;
 }
 
 void start_game() {
@@ -104,15 +121,7 @@ void start_game() {
             running = false;
         } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && !game_over) {
             int col = ev.mouse.x / CELL_SIZE;
-            if (place_piece(col)) {
-                if (check_winner(current_player)) {
-                    game_over = true;
-                    if (current_player == PLAYER1) score1++;
-                    else score2++;
-                } else {
-                    current_player = (current_player == PLAYER1) ? PLAYER2 : PLAYER1;
-                }
-            }
+            play_turn(col);
         } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
             if (ev.keyboard.keycode == ALLEGRO_KEY_R) {
                 reset_board();
@@ -120,16 +129,8 @@ void start_game() {
                 selected_col = (selected_col - 1 + COLS) % COLS;
             } else if (ev.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
                 selected_col = (selected_col + 1) % COLS;
-            } else if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER) {
-                if (place_piece(selected_col)) {
-                    if (check_winner(current_player)) {
-                        game_over = true;
-                        if (current_player == PLAYER1) score1++;
-                        else score2++;
-                    } else {
-                        current_player = (current_player == PLAYER1) ? PLAYER2 : PLAYER1;
-                    }
-                }
+            } else if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER && !game_over) {
+                play_turn(selected_col);
             }
         } else if (ev.type == ALLEGRO_EVENT_TIMER) {
             redraw = true;
