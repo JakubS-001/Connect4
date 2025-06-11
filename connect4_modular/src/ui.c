@@ -1,5 +1,6 @@
 #include "../include/ui.h"
 #include "../include/game.h"
+#include "../include/save.h"
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
@@ -18,6 +19,7 @@ typedef struct {
 } FallingPiece;
 
 static FallingPiece falling_piece = {0};
+
 
 void draw_board(ALLEGRO_FONT* font, int hover_col) {
     al_clear_to_color(al_map_rgb(15, 27, 39)); //Background color
@@ -88,7 +90,12 @@ void draw_menu(ALLEGRO_FONT* font) {
     al_clear_to_color(al_map_rgb(15, 27, 39));
     al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 50, ALLEGRO_ALIGN_CENTER, "Connect 4");
     al_draw_text(font, al_map_rgb(200, 200, 200), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10, ALLEGRO_ALIGN_CENTER, "Kliknij ENTER aby zaczac");
-}
+    al_draw_text(font, al_map_rgb(200, 200, 200), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 50, ALLEGRO_ALIGN_CENTER, "Nacisnij R aby zresetowac statystyki");
+
+    char stats[64];
+    sprintf(stats, "Statystyki: Gracz 1: %d   Gracz 2: %d", score1, score2);
+    al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 90, ALLEGRO_ALIGN_CENTER, stats);
+}   
 
 void start_game() {
     if (!al_init()) {
@@ -143,6 +150,7 @@ void start_game() {
     bool running = true;
     bool redraw = true;
     reset_board();
+    load_scores();
     game_state = STATE_MENU;
     al_start_timer(timer);
 
@@ -174,6 +182,8 @@ void start_game() {
                     reset_board();
                 } else if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
                     running = false; // Exit the game (ESC key)
+                } else if (ev.keyboard.keycode == ALLEGRO_KEY_R) {
+                    reset_scores();
                 }
             } else if (game_state == STATE_PLAYING) {
                 if (ev.keyboard.keycode == ALLEGRO_KEY_R) {
@@ -191,7 +201,7 @@ void start_game() {
 
         } else if (ev.type == ALLEGRO_EVENT_TIMER) {
             if (game_state == STATE_PLAYING && falling_piece.active) {
-                float target_y = (falling_piece.target_row + 1) * CELL_SIZE + CELL_SIZE / 2;
+                float target_y = (falling_piece.target_row) * CELL_SIZE + CELL_SIZE / 2;
                 falling_piece.y += 20; // szybkość spadania
 
                 if (falling_piece.y >= target_y) {
@@ -201,6 +211,7 @@ void start_game() {
                         game_over = true;
                         if (falling_piece.player == PLAYER1) score1++;
                         else score2++;
+                        save_scores();
                     } else if (is_board_full()) {
                         game_over = true;
                         draw_game = true;
