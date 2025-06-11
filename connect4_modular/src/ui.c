@@ -92,9 +92,8 @@ void start_game() {
         return;
     }
 
-    // ALLEGRO_FONT* font = al_load_ttf_font("/System/Library/Fonts/Supplemental/Arial.ttf", 48, 0);
-    ALLEGRO_FONT* font = al_load_ttf_font("../../assets/fonts/DejaVuSans.ttf", 48, 0);
-
+//     ALLEGRO_FONT* font = al_load_ttf_font("../../assets/fonts/DejaVuSans.ttf", 48, 0);
+    ALLEGRO_FONT* font = al_load_ttf_font("arial.ttf", 24, 0);
     if (!font) {
         fprintf(stderr, "Blad: nie udalo sie zaladowac czcionki Arial.ttf\n");
         al_destroy_display(display);
@@ -121,9 +120,15 @@ void start_game() {
 
         if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             running = false;
+
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES) {
+            int col = ev.mouse.x / CELL_SIZE;
+            if (col >= 0 && col < COLS) {
+                selected_col = col;
+            }
+
         } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && !game_over) {
             int col = ev.mouse.x / CELL_SIZE;
-
             play_turn(col);
 
         } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
@@ -135,8 +140,8 @@ void start_game() {
                 selected_col = (selected_col + 1) % COLS;
             } else if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER && !game_over) {
                 play_turn(selected_col);
-
             }
+
         } else if (ev.type == ALLEGRO_EVENT_TIMER) {
             redraw = true;
         }
