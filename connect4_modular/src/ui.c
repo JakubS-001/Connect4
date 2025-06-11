@@ -23,14 +23,14 @@ void draw_board(ALLEGRO_FONT* font, int hover_col) {
     al_clear_to_color(al_map_rgb(15, 27, 39)); //Background color
     
     if (hover_col >= 0 && hover_col < COLS) {
-        al_draw_filled_rectangle(hover_col * CELL_SIZE, CELL_SIZE, (hover_col + 1) * CELL_SIZE, SCREEN_HEIGHT, al_map_rgba(76, 91, 106, 90));
+        al_draw_filled_rectangle(hover_col * CELL_SIZE, TOP_MARGIN, (hover_col + 1) * CELL_SIZE, SCREEN_HEIGHT, al_map_rgba(76, 91, 106, 90));
 
     }
 
     for (int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
             int cx = c * CELL_SIZE + CELL_SIZE / 2;
-            int cy = (r + 1) * CELL_SIZE + CELL_SIZE / 2;
+            int cy = r * CELL_SIZE + TOP_MARGIN + CELL_SIZE / 2;
             ALLEGRO_COLOR color = al_map_rgb(44, 62, 80); // Default cell color
             if (board[r][c] == PLAYER1)
                 color = al_map_rgb(227, 66, 52);
@@ -51,7 +51,7 @@ void draw_board(ALLEGRO_FONT* font, int hover_col) {
         ALLEGRO_COLOR color = (falling_piece.player == PLAYER1)
             ? al_map_rgb(227, 66, 52)
             : al_map_rgb(255, 215, 0);
-        al_draw_filled_circle(cx, falling_piece.y, CELL_SIZE / 2 - 5, color);
+        al_draw_filled_circle(cx, falling_piece.y + TOP_MARGIN, CELL_SIZE / 2 - 5, color);
     }
 
     char score_text[64];
@@ -60,8 +60,8 @@ void draw_board(ALLEGRO_FONT* font, int hover_col) {
 
     if (game_over) {const char* end_text = draw_game ? "Remis!" :
         (current_player == PLAYER1 ? "Gracz 1 wygrywa!" : "Gracz 2 wygrywa!");
-        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_WIDTH / 2, 70, ALLEGRO_ALIGN_CENTER, end_text);
-        al_draw_text(font, al_map_rgb(200, 200, 200), SCREEN_WIDTH / 2, 130, ALLEGRO_ALIGN_CENTER, "Nacisnij R aby zrestartowac");
+        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_WIDTH / 2, 50, ALLEGRO_ALIGN_CENTER, end_text);
+        al_draw_text(font, al_map_rgb(200, 200, 200), SCREEN_WIDTH / 2, 80, ALLEGRO_ALIGN_CENTER, "Nacisnij R aby zrestartowac");
     }
 }
 

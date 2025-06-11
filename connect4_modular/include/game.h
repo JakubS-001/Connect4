@@ -7,8 +7,11 @@
 #define ROWS 6
 #define CELL_SIZE 90
 #define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 640
+// #define SCREEN_HEIGHT 640
+#define SCREEN_HEIGHT (CELL_SIZE * ROWS + TOP_MARGIN)
 #define FPS 60
+#define TOP_MARGIN 120
+
 
 enum { EMPTY, PLAYER1, PLAYER2 };
 
