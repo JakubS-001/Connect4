@@ -92,7 +92,9 @@ void start_game() {
         return;
     }
 
-    ALLEGRO_FONT* font = al_load_ttf_font("/System/Library/Fonts/Supplemental/Arial.ttf", 48, 0);
+    // ALLEGRO_FONT* font = al_load_ttf_font("/System/Library/Fonts/Supplemental/Arial.ttf", 48, 0);
+    ALLEGRO_FONT* font = al_load_ttf_font("../../assets/fonts/DejaVuSans.ttf", 48, 0);
+
     if (!font) {
         fprintf(stderr, "Blad: nie udalo sie zaladowac czcionki Arial.ttf\n");
         al_destroy_display(display);
