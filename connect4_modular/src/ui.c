@@ -25,9 +25,18 @@ void draw_board(ALLEGRO_FONT* font, int hover_col) {
     al_clear_to_color(al_map_rgb(15, 27, 39)); //Background color
     
     if (hover_col >= 0 && hover_col < COLS) {
-        al_draw_filled_rectangle(hover_col * CELL_SIZE, TOP_MARGIN, (hover_col + 1) * CELL_SIZE, SCREEN_HEIGHT, al_map_rgba(76, 91, 106, 90));
+    ALLEGRO_COLOR highlight_color;
+    if (current_player == PLAYER1)
+        highlight_color = al_map_rgba(255, 127, 127, 120);
+    else
+        highlight_color = al_map_rgba(255, 255, 150, 120);
 
-    }
+    al_draw_filled_rectangle(
+        hover_col * CELL_SIZE, TOP_MARGIN,
+        (hover_col + 1) * CELL_SIZE, SCREEN_HEIGHT,
+        highlight_color
+    );
+}
 
     for (int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
