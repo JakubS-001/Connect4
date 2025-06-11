@@ -17,6 +17,7 @@ extern int current_player;
 extern int score1, score2;
 extern bool game_over;
 extern bool draw_game;
+extern int winning_positions[4][2];
 
 void reset_board();
 bool place_piece(int col);

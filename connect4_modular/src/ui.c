@@ -9,6 +9,16 @@
 
 static int selected_col = 0;
 
+typedef struct {
+    int col;
+    int target_row;
+    float y;
+    int player;
+    bool active;
+} FallingPiece;
+
+static FallingPiece falling_piece = {0};
+
 void draw_board(ALLEGRO_FONT* font, int hover_col) {
     al_clear_to_color(al_map_rgb(15, 27, 39)); //Background color
     
@@ -27,7 +37,21 @@ void draw_board(ALLEGRO_FONT* font, int hover_col) {
             else if (board[r][c] == PLAYER2)
                 color = al_map_rgb(255, 215, 0);
             al_draw_filled_circle(cx, cy, CELL_SIZE / 2 - 5, color);
+            for (int i = 0; i < 4; i++) {
+            if (winning_positions[i][0] == r && winning_positions[i][1] == c) {
+                    al_draw_circle(cx, cy, CELL_SIZE / 2 - 3, al_map_rgb(64, 224, 208), 4); // Highlight winning positions
+                    break;
+                }
+            }
         }
+    }
+
+    if (falling_piece.active) {
+        int cx = falling_piece.col * CELL_SIZE + CELL_SIZE / 2;
+        ALLEGRO_COLOR color = (falling_piece.player == PLAYER1)
+            ? al_map_rgb(227, 66, 52)
+            : al_map_rgb(255, 215, 0);
+        al_draw_filled_circle(cx, falling_piece.y, CELL_SIZE / 2 - 5, color);
     }
 
     char score_text[64];
@@ -42,19 +66,21 @@ void draw_board(ALLEGRO_FONT* font, int hover_col) {
 }
 
 bool play_turn(int col) {
-    if (place_piece(col)) {
-        if (check_winner(current_player)) {
-            game_over = true;
-            if (current_player == PLAYER1) score1++;
-            else score2++;
-        } else if (is_board_full()) {
-            game_over = true;
-            draw_game = true;
-        } else {
-            current_player = (current_player == PLAYER1) ? PLAYER2 : PLAYER1;
-        }
-        return true;
+    if (game_over || col < 0 || col >= COLS || board[0][col] != EMPTY || falling_piece.active) {
+        return false;
     }
+
+    for (int r = ROWS - 1; r >= 0; r--) {
+        if (board[r][col] == EMPTY) {
+            falling_piece.col = col;
+            falling_piece.target_row = r;
+            falling_piece.y = CELL_SIZE / 2;  // start animacji (góra)
+            falling_piece.player = current_player;
+            falling_piece.active = true;
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -143,6 +169,28 @@ void start_game() {
             }
 
         } else if (ev.type == ALLEGRO_EVENT_TIMER) {
+            if (falling_piece.active) {
+                float target_y = (falling_piece.target_row + 1) * CELL_SIZE + CELL_SIZE / 2;
+                falling_piece.y += 20; // szybkość spadania
+
+                if (falling_piece.y >= target_y) {
+                    board[falling_piece.target_row][falling_piece.col] = falling_piece.player;
+
+                    if (check_winner(falling_piece.player)) {
+                        game_over = true;
+                        if (falling_piece.player == PLAYER1) score1++;
+                        else score2++;
+                    } else if (is_board_full()) {
+                        game_over = true;
+                        draw_game = true;
+                    } else {
+                        current_player = (current_player == PLAYER1) ? PLAYER2 : PLAYER1;
+                    }
+
+                    falling_piece.active = false;
+                }
+            }
+
             redraw = true;
         }
 
