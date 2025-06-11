@@ -74,7 +74,7 @@ bool play_turn(int col) {
         if (board[r][col] == EMPTY) {
             falling_piece.col = col;
             falling_piece.target_row = r;
-            falling_piece.y = CELL_SIZE / 2;  // start animacji (góra)
+            falling_piece.y = CELL_SIZE / 2;  // Start animation
             falling_piece.player = current_player;
             falling_piece.active = true;
             return true;
@@ -82,6 +82,12 @@ bool play_turn(int col) {
     }
 
     return false;
+}
+
+void draw_menu(ALLEGRO_FONT* font) {
+    al_clear_to_color(al_map_rgb(15, 27, 39));
+    al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 50, ALLEGRO_ALIGN_CENTER, "Connect 4");
+    al_draw_text(font, al_map_rgb(200, 200, 200), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10, ALLEGRO_ALIGN_CENTER, "Kliknij ENTER aby zaczac");
 }
 
 void start_game() {
@@ -118,7 +124,6 @@ void start_game() {
         return;
     }
 
-//     ALLEGRO_FONT* font = al_load_ttf_font("../../assets/fonts/DejaVuSans.ttf", 48, 0);
     ALLEGRO_FONT* font = al_load_ttf_font("arial.ttf", 24, 0);
     if (!font) {
         fprintf(stderr, "Blad: nie udalo sie zaladowac czcionki Arial.ttf\n");
@@ -138,6 +143,7 @@ void start_game() {
     bool running = true;
     bool redraw = true;
     reset_board();
+    game_state = STATE_MENU;
     al_start_timer(timer);
 
     while (running) {
@@ -148,28 +154,43 @@ void start_game() {
             running = false;
 
         } else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES) {
-            int col = ev.mouse.x / CELL_SIZE;
-            if (col >= 0 && col < COLS) {
-                selected_col = col;
+            if (game_state == STATE_PLAYING) {
+                int col = ev.mouse.x / CELL_SIZE;
+                if (col >= 0 && col < COLS) {
+                    selected_col = col;
+                }
             }
 
-        } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && !game_over) {
-            int col = ev.mouse.x / CELL_SIZE;
-            play_turn(col);
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
+            if (game_state == STATE_PLAYING && !game_over) {
+                int col = ev.mouse.x / CELL_SIZE;
+                play_turn(col);
+            }
 
         } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
-            if (ev.keyboard.keycode == ALLEGRO_KEY_R) {
-                reset_board();
-            } else if (ev.keyboard.keycode == ALLEGRO_KEY_LEFT) {
-                selected_col = (selected_col - 1 + COLS) % COLS;
-            } else if (ev.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
-                selected_col = (selected_col + 1) % COLS;
-            } else if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER && !game_over) {
-                play_turn(selected_col);
+            if (game_state == STATE_MENU) {
+                if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER) {
+                    game_state = STATE_PLAYING;
+                    reset_board();
+                } else if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+                    running = false; // Exit the game (ESC key)
+                }
+            } else if (game_state == STATE_PLAYING) {
+                if (ev.keyboard.keycode == ALLEGRO_KEY_R) {
+                    reset_board();
+                } else if (ev.keyboard.keycode == ALLEGRO_KEY_LEFT) {
+                    selected_col = (selected_col - 1 + COLS) % COLS;
+                } else if (ev.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
+                    selected_col = (selected_col + 1) % COLS;
+                } else if (ev.keyboard.keycode == ALLEGRO_KEY_ENTER && !game_over) {
+                    play_turn(selected_col);
+                } else if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+                    game_state = STATE_MENU;
+                }
             }
 
         } else if (ev.type == ALLEGRO_EVENT_TIMER) {
-            if (falling_piece.active) {
+            if (game_state == STATE_PLAYING && falling_piece.active) {
                 float target_y = (falling_piece.target_row + 1) * CELL_SIZE + CELL_SIZE / 2;
                 falling_piece.y += 20; // szybkość spadania
 
@@ -195,7 +216,11 @@ void start_game() {
         }
 
         if (redraw && al_is_event_queue_empty(queue)) {
-            draw_board(font, selected_col);
+            if (game_state == STATE_MENU)
+                draw_menu(font);
+            else if (game_state == STATE_PLAYING)
+                draw_board(font, selected_col);
+
             al_flip_display();
             redraw = false;
         }

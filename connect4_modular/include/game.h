@@ -28,4 +28,11 @@ bool check_draw();
 bool check_winner(int player);
 bool is_board_full(void);
 
+typedef enum {
+    STATE_MENU,
+    STATE_PLAYING
+} GameState;
+
+extern GameState game_state;
+
 #endif

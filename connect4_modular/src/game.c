@@ -5,6 +5,7 @@ int current_player = PLAYER1;
 int score1 = 0, score2 = 0;
 bool game_over = false;
 bool draw_game = false;
+GameState game_state = STATE_MENU;
 
 int winning_positions[4][2];
 
