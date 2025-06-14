@@ -13,7 +13,7 @@ Statystyki graczy zapisywane są do pliku scores.txt, można je zresetować w me
 - Biblioteka [Allegro 5](https://liballeg.org/)
 - Plik czcionki `arial.ttf` w katalogu z plikiem wykonywalnym
 
-W folderze Windows znajduje się gotowy skompilowany plik connect4.exe na systemy Windows z biblioteką Allegro5. 
+W folderze Windows znajduje się gotowy skompilowany plik connect4.exe na systemy Windows z biblioteką Allegro5.
 
 ## Budowanie
 
@@ -40,8 +40,9 @@ Po zbudowaniu uruchom grę poleceniem:
 - **R** – restart planszy (w trakcie gry) lub zresetuj statystyki (w menu)
 
 ### Sterowanie myszką / klawiaturą
+
 - **Ruch myszy / Strzałki lewo prawo** - wybierz kolumnę
-- **Kliknięcie myszy / ENTER** - wrzuć pionek do kolumny 
+- **Kliknięcie myszy / ENTER** - wrzuć pionek do kolumny
 
 ## Autorzy
 
