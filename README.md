@@ -12,11 +12,11 @@ Connect 4 to klasyczna gra logiczna dla dwóch graczy. Celem gry jest ułożenie
 - Biblioteka [Allegro 5](https://liballeg.org/)
 - Plik czcionki `arial.ttf` w katalogu z plikiem wykonywalnym
 
-W folderze Windows znajduje się gotowy skompilowany plik connect4.exe na systemy Windows z biblioteką Allegro5. 
+W folderze Windows znajduje się gotowy skompilowany plik connect4.exe na systemy Windows z biblioteką Allegro5.
 
 ## Budowanie
 
-Aby zbudować projekt, przejdź do katalogu `connect4_modular` i uruchom:
+Aby zbudować projekt, przejdź do katalogu `connect4_source` i uruchom:
 
 ```sh
 make
@@ -39,8 +39,9 @@ Po zbudowaniu uruchom grę poleceniem:
 - **R** – restart planszy (w trakcie gry) lub zresetuj statystyki (w menu)
 
 ### Sterowanie myszką / klawiaturą
+
 - **Ruch myszy / Strzałki lewo prawo** - wybierz kolumnę
-- **Kliknięcie myszy / ENTER** - wrzuć pionek do kolumny 
+- **Kliknięcie myszy / ENTER** - wrzuć pionek do kolumny
 
 ## Autorzy
 
