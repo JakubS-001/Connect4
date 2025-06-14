@@ -5,6 +5,7 @@ Gra Connect 4 napisana w języku C z wykorzystaniem biblioteki Allegro 5.
 ## Opis
 
 Connect 4 to klasyczna gra logiczna dla dwóch graczy. Celem gry jest ułożenie czterech swoich pionków w linii (pionowo, poziomo lub na skos) na planszy o wymiarach 6x7.
+Statystyki graczy zapisywane są do pliku scores.txt, można je zresetować w menu klikając R.
 
 ## Wymagania
 
