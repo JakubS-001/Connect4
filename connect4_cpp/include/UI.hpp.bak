@@ -1,0 +1,28 @@
+#ifndef CONNECT4_UI_HPP
+#define CONNECT4_UI_HPP
+
+#include "Game.hpp"
+#include <allegro5/allegro_font.h>
+
+class UI {
+public:
+    explicit UI(Game &game);
+    void start();
+
+private:
+    Game &game_;
+    struct FallingPiece {
+        int col = 0;
+        int target_row = 0;
+        float y = 0;
+        int player = 0;
+        bool active = false;
+    };
+    FallingPiece fallingPiece_;
+
+    void drawBoard(ALLEGRO_FONT* font, int hover_col);
+    void drawMenu(ALLEGRO_FONT* font);
+    bool playTurn(int col);
+};
+
+#endif
