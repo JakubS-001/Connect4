@@ -154,7 +154,6 @@ void UI::start() {
                     if (playScreen_) playScreen_->handleEvent(ev);
                 }
             }
-        }
         } else if (ev.type == ALLEGRO_EVENT_TIMER) {
             if (game_.getState() == Game::STATE_PLAYING && fallingPiece_.active) {
                 float target_y = (fallingPiece_.target_row) * CELL_SIZE + CELL_SIZE / 2;
@@ -174,7 +173,7 @@ void UI::start() {
 
         if (redraw && al_is_event_queue_empty(queue)) {
             // switch screens if needed
-            Screen* newScreen = (game_.getState() == Game::STATE_MENU) ? menuScreen_.get() : playScreen_.get();
+            Screen* newScreen = (game_.getState() == Game::STATE_MENU) ? static_cast<Screen*>(menuScreen_.get()) : static_cast<Screen*>(playScreen_.get());
             if (newScreen != currentScreen_) {
                 if (currentScreen_) currentScreen_->onExit();
                 currentScreen_ = newScreen;

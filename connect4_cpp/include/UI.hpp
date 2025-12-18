@@ -24,6 +24,10 @@ private:
 
     bool playTurn(int col);
 
+    // Drawing helpers used by UI
+    void drawMenu(ALLEGRO_FONT* font);
+    void drawBoard(ALLEGRO_FONT* font, int hover_col);
+
     std::unique_ptr<MenuScreen> menuScreen_;
     std::unique_ptr<PlayScreen> playScreen_;
     Screen* currentScreen_ = nullptr;
