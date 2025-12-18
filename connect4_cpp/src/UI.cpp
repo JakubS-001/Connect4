@@ -50,7 +50,12 @@ void UI::drawBoard(ALLEGRO_FONT* font, int hover_col) {
     al_clear_to_color(al_map_rgb(15, 27, 39));
     if (hover_col >= 0 && hover_col < Board::COLS) {
         ALLEGRO_COLOR highlight_color = (game_.currentPlayer() == Board::PLAYER1) ? al_map_rgba(255,127,127,120) : al_map_rgba(255,255,150,120);
-        al_draw_filled_rectangle(hover_col * CELL_SIZE, TOP_MARGIN, (hover_col + 1) * CELL_SIZE, SCREEN_HEIGHT, highlight_color);
+        // Draw an outline rectangle (under the pieces) so only the border is visible
+        float x1 = hover_col * CELL_SIZE + 2.0f;
+        float y1 = TOP_MARGIN + 2.0f;
+        float x2 = (hover_col + 1) * CELL_SIZE - 2.0f;
+        float y2 = SCREEN_HEIGHT - 2.0f;
+        al_draw_rectangle(x1, y1, x2, y2, highlight_color, 4.0f);
     }
 
     for (int r = 0; r < Board::ROWS; ++r) {
@@ -186,7 +191,11 @@ void UI::start() {
             if (game_.getState() == Game::STATE_PLAYING) {
                 if (selected_col >= 0 && selected_col < Board::COLS) {
                     ALLEGRO_COLOR highlight_color = (game_.currentPlayer() == Board::PLAYER1) ? al_map_rgba(255,127,127,120) : al_map_rgba(255,255,150,120);
-                    al_draw_filled_rectangle(selected_col * CELL_SIZE, TOP_MARGIN, (selected_col + 1) * CELL_SIZE, SCREEN_HEIGHT, highlight_color);
+                    float x1 = selected_col * CELL_SIZE + 2.0f;
+                    float y1 = TOP_MARGIN + 2.0f;
+                    float x2 = (selected_col + 1) * CELL_SIZE - 2.0f;
+                    float y2 = SCREEN_HEIGHT - 2.0f;
+                    al_draw_rectangle(x1, y1, x2, y2, highlight_color, 4.0f);
                 }
 
                 if (fallingPiece_.active) {
